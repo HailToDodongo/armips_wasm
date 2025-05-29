@@ -1,0 +1,20 @@
+{
+  "name": "armips-wasm",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HailToDodongo/armips_wasm.git"
+  },
+  "files": [
+    "index.js",
+    "armips.wasm"
+  ],
+  "types": "index.d.ts",
+  "license": "MIT",
+  "author": "HailToDodongo (armips: Kingcom)",
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "dist": "cp package.json build && cp WASM/index.d.ts build/index.d.ts && cd build && npm pack"
+  }
+}

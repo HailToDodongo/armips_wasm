@@ -57,6 +57,13 @@ function(init_target TARGET_NAME)
 	endif()
 endfunction()
 
+# if compiled to WASM, enable the NodeJS filesystem
+if(EMSCRIPTEN)
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s EXPORT_ES6=1")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s MODULARIZE=1")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s 'EXPORTED_RUNTIME_METHODS=[\"FS\"]'")
+endif()
+
 # Helper function to automatically set source groups for all source files
 function(armips_target_sources TARGET SCOPE)
 	target_sources("${TARGET}" "${SCOPE}" ${ARGN})
