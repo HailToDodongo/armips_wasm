@@ -1,22 +1,29 @@
 // NOTE: this file gets appended to the wrapper created by emscripten
 
+let initialFiles = [];
+
 /**
  * @param {string} asm 
- * @returns Promise<{imem: Uint8Array, dmem: Uint8Array}>
+ * @returns Promise<Record<string, Uint8Array>>
  */
 export async function assemble(asm) {
   const encoder = new TextEncoder();
   const data = encoder.encode(asm);
 
   const m = await Module({
-    argv: ["", "", "rsp_test.S"],
+    argv: ["", "", "asm.s"],
     preRun: (mod) => {
-      mod.FS.writeFile("rsp_test.S", data);
-      //console.log("PRERUN", mod.FS);
+      mod.FS.writeFile("asm.s", data);
+      initialFiles = mod.FS.readdir("/");
     }
   });
 
-  const imem = m.FS.readFile("ucode.imem", {});
-  const dmem = m.FS.readFile("ucode.dmem", {});
-  return {imem, dmem};
+  const newFiles = m.FS.readdir("/")
+    .filter(f => !initialFiles.includes(f));
+
+  const res = {};
+  for(const f of newFiles) {
+    res[f] = m.FS.readFile(f, {});
+  }
+  return res;
 }
