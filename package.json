@@ -1,5 +1,5 @@
 {
-  "name": "armips-wasm",
+  "name": "armips",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -15,6 +15,6 @@
   "type": "module",
   "main": "build/index.js",
   "scripts": {
-    "dist": "cp package.json build && cp WASM/index.d.ts build/index.d.ts && cd build && npm pack"
+    "dist": "cp package.json build && cp WASM/index.d.ts build/index.d.ts && cd build && npm publish"
   }
 }

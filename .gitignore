@@ -5,6 +5,8 @@
 *.sdf
 *.suo
 *.vcxproj.user
+
+node_modules
 build
 
 # Temporary dir for compiled headers.
