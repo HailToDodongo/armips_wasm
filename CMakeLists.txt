@@ -34,7 +34,7 @@ function(init_target TARGET_NAME)
 
 		target_compile_options(${TARGET_NAME} PRIVATE -Wno-unused-parameter)
 
-		if (NOT MSVC AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Haiku" AND NOT WIIU)
+		if (NOT MSVC AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Haiku" AND NOT WIIU AND NOT EMSCRIPTEN)
 			find_package(Threads REQUIRED)
 			target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
 		endif()
@@ -56,6 +56,12 @@ function(init_target TARGET_NAME)
 		endif()
 	endif()
 endfunction()
+
+# if compiled to WASM, enable the NodeJS filesystem
+if(EMSCRIPTEN)
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s NODERAWFS=1")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s ASSERTIONS=1")
+endif()
 
 # Helper function to automatically set source groups for all source files
 function(armips_target_sources TARGET SCOPE)
@@ -243,6 +249,7 @@ if(NOT ARMIPS_LIBRARY_ONLY)
 		Main/Tests.h
 	)
 
+if(NOT EMSCRIPTEN)
 	# tests
 	add_executable(armipstests "")
 	init_target(armipstests)
@@ -259,6 +266,7 @@ if(NOT ARMIPS_LIBRARY_ONLY)
 
 	enable_testing()
 	add_test(NAME armipstests COMMAND armipstests ${CMAKE_CURRENT_SOURCE_DIR}/Tests)
+endif()
 
 	# install
 	install(TARGETS armips-bin RUNTIME DESTINATION .)

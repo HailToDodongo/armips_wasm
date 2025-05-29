@@ -5,6 +5,7 @@
 *.sdf
 *.suo
 *.vcxproj.user
+build
 
 # Temporary dir for compiled headers.
 /ipch/

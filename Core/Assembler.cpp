@@ -15,7 +15,9 @@
 #include "Core/SymbolData.h"
 #include "Parser/Parser.h"
 
-#include <thread>
+#if defined(__EMSCRIPTEN__) || defined(__wasm__)
+  #include <thread>
+#endif
 
 bool encodeAssembly(std::unique_ptr<CAssemblerCommand> content, SymbolData& symData, TempData& tempData)
 {
@@ -149,6 +151,11 @@ bool runArmips(ArmipsArguments& settings)
 	Global.FileInfo.TotalLineCount = 0;
 	Global.relativeInclude = false;
 	Global.multiThreading = true;
+
+  #if defined(__EMSCRIPTEN__) || defined(__wasm__)
+    Global.multiThreading = false;
+  #endif
+
 	Architecture::setCurrent(InvalidArchitecture);
 
 	Tokenizer::clearEquValues();
