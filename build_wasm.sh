@@ -11,6 +11,9 @@ cmake --build . -j10
 # emscripten being stupid :/
 # First patch in proper support to set arguments (usually process.argv) from the outside
 sed -i -e 's/process.argv/Module.argv/g' armips.js
+# Override loggers
+sed -i -e 's/var wasmBinary;/var wasmBinary;arguments_ = Module.argv.slice(2);out = Module.log.bind(Module.log);err = Module.error.bind(Module.error);/g' armips.js
+
 # Then pass in the instance before running main(), used to setup files in FS
 sed -i -e 's/preRun();/preRun(Module);/g' armips.js
 
